@@ -17,6 +17,9 @@ public class Main {
 
         // 4. ThreadSafeInitialization
         testThreadSafeInitialization();
+
+        // 5. DoubleCheckedLocking
+        testDoubleCheckedLocking();
     }
 
     /**
@@ -76,6 +79,22 @@ public class Main {
         // singleton.ThreadSafeInitialization@13221655, singleton.ThreadSafeInitialization@13221655 ...
         for (ThreadSafeInitialization threadSafeInitialization : threadSafeInitializations) {
             System.out.println(threadSafeInitialization);
+        }
+    }
+
+    private static void testDoubleCheckedLocking() {
+        DoubleCheckedLocking[] doubleCheckedLockings = new DoubleCheckedLocking[10];
+        // 스레드 풀 생성
+        ExecutorService service = Executors.newCachedThreadPool();
+        for (int i = 0; i < 20; i++) {
+            final int j = i;
+            service.submit(() -> doubleCheckedLockings[j] = DoubleCheckedLocking.getInstance());
+        }
+        service.shutdown();
+
+        // singleton.DoubleCheckedLocking@e9e54c2 ...
+        for (DoubleCheckedLocking doubleCheckedLocking : doubleCheckedLockings) {
+            System.out.println(doubleCheckedLocking);
         }
     }
 }
