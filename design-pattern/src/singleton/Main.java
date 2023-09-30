@@ -20,6 +20,9 @@ public class Main {
 
         // 5. DoubleCheckedLocking
         testDoubleCheckedLocking();
+
+        // 6. BillPughSolution
+        testBillPughSolution();
     }
 
     /**
@@ -95,6 +98,22 @@ public class Main {
         // singleton.DoubleCheckedLocking@e9e54c2 ...
         for (DoubleCheckedLocking doubleCheckedLocking : doubleCheckedLockings) {
             System.out.println(doubleCheckedLocking);
+        }
+    }
+
+    private static void testBillPughSolution() {
+        BillPughSolution[] billPughSolutions = new BillPughSolution[10];
+        // 스레드 풀 생성
+        ExecutorService service = Executors.newCachedThreadPool();
+        for (int i = 0; i < 20; i++) {
+            final int j = i;
+            service.submit(() -> billPughSolutions[j] = BillPughSolution.getInstance());
+        }
+        service.shutdown();
+
+        // singleton.BillPughSolution@6d311334 ...
+        for (BillPughSolution billPughSolution : billPughSolutions) {
+            System.out.println(billPughSolution);
         }
     }
 }
